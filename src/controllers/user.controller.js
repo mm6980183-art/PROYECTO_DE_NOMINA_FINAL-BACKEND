@@ -6,6 +6,7 @@ export const getUsers = async (req, res) => {
     const result = await pool.request().query('SELECT * FROM Colaboradores');
     res.json(result.recordset);
 };
+
 export const getUser = async (req, res) => {
     const pool = await getConnection();
     const result = await pool.request()
