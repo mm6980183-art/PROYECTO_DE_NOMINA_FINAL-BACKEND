@@ -11,7 +11,24 @@ app.use(cors({
 	allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json());
+// Middleware para JSON con manejo de encoding UTF-8
+app.use(express.json({ 
+	limit: '10mb',
+	strict: false 
+}));
+
+// Middleware para manejo de errores de JSON
+app.use((err, req, res, next) => {
+	if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+		console.error('Error de JSON:', err.message);
+		return res.status(400).json({ 
+			error: 'JSON inválido',
+			detalles: err.message
+		});
+	}
+	next();
+});
+
 app.use(userRoutes);
 
 export default app
